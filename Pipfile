@@ -11,6 +11,7 @@ flask = "*"
 pytest = "*"
 pytest-flask = "*"
 flask-restx = "*"
+mysql-connector-python = "*"
 
 [requires]
 python_version = "3.8"

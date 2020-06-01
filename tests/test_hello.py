@@ -1,12 +1,12 @@
 ## Something that is untested is broken.
 import pytest
 
-from novadrive import nova
+import app
 
 @pytest.fixture
 def client():
-    app = nova.flask_app
-    client = app.test_client()
+    flask_app = app.flask_app
+    client = flask_app.test_client()
     return client
 
 
