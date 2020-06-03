@@ -5,8 +5,8 @@ import app
 
 @pytest.fixture
 def client():
-    flask_app = app.flask_app
-    client = flask_app.test_client()
+    test_app = app.flask_app
+    client = test_app.test_client()
     return client
 
 

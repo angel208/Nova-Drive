@@ -3,7 +3,7 @@ from flask import Blueprint
 from flask_restx import Api
 
 #imports the namespaces for this version of the api
-from novadrive.api.v1.default_controller import name_space as ns_nova
+from novadrive.api.v1.controllers.default_controller import name_space as ns_nova
 
 #creates a blueprint
 blueprint = Blueprint('nova_api', __name__)
