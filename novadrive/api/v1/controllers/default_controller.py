@@ -1,5 +1,10 @@
 from flask import Flask
 from flask_restx  import Api, Resource, fields
+from ..database import user
+
+#------------
+print( user.get_user( id = 1 ))
+#------------
 
 flask_app  = Flask(__name__)
 api = Api(flask_app)
