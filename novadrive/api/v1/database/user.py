@@ -1,7 +1,6 @@
 from . import sql_connection as sql
 
 
-
 def get_user( id ):
 
     with sql.DBConnection() as sql_connection:

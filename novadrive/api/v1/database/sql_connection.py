@@ -1,21 +1,36 @@
 import mysql.connector
-import configparser
-
-
+import configparser, os
 
 class DBConnection(object):
 
-    def __init__(self):
+    def __init__(self, testing = False ):
 
+        #get environment
+        try:
+            self.env = os.environ['NOVA_ENV'] 
+        except KeyError:  
+            os.environ['NOVA_ENV'] = 'DEV'
+            self.env = os.environ['NOVA_ENV'] 
+        
+        print ( "db connection environment: " + self.env)
+
+        #get config file
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
-        self.db_config = self.config['database_dev']
+
+        #set config data based on environment
+        if( testing == True or self.env == 'TEST' ):
+            self.db_config = self.config['database_test']
+        elif ( self.env == 'PROD' ):
+            self.db_config = self.config['database_prod']
+        else:
+            self.db_config = self.config['database_dev']
 
         self._db_connection = None
         self._db_cur = None 
 
     def __enter__(self):
-        self._db_connection = mysql.connector.connect( host = self.db_config['host'], user = self.db_config['username'], passwd = "", db = self.db_config['database'] )
+        self._db_connection = mysql.connector.connect( host = self.db_config['host'], user = self.db_config['username'], passwd = "", db = self.db_config['database'], autocommit=True )
         self._db_cur = self._db_connection.cursor(dictionary=True)
         return self._db_cur
 
