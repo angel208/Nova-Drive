@@ -1,5 +1,5 @@
-from ..database import user
+from ..database.user import get_user
 
-#------------
-#print( user.get_user( id = 1 ))
-#------------
+def get_user_from_db( id ):
+    my_user = get_user(id)
+    return my_user

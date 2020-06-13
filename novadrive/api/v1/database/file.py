@@ -1,0 +1,26 @@
+from . import sql_connection as sql
+
+
+def create_file( name, filetype, folder_id, user_id, file_uri, thumbnail_uri = '' , file_size = 0):
+
+    with sql.DBConnection() as sql_connection:
+        
+        query = "INSERT INTO file (name, type, folder_id, user_id, file_uri, thumbnail_uri  ) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (name, filetype , folder_id, user_id, file_uri, thumbnail_uri)
+
+        sql_connection.execute(query, val)
+        inserted_row_id = sql_connection.lastrowid
+
+        return inserted_row_id
+
+def get_file( id ):
+
+    with sql.DBConnection() as sql_connection:
+        
+        query = "SELECT * FROM file WHERE id = %s"
+        val = (id, )
+
+        sql_connection.execute(query, val)
+        result = sql_connection.fetchone()
+
+        return result

@@ -18,5 +18,10 @@ def test_app():
   
 
 @pytest.fixture(scope="module")
-def test_users():
-    return [{'id': 1, 'name': 'test', 'lastname': 'user', 'email': 'angel.pena@gmail.com', 'storage_remaining': "Decimal('10000000')", 'password': '5F4DCC3B5AA765D61D8327DEB882CF99', 'image_uri': None, 'thumbnail_uri': None, 'created': "datetime.datetime(2020, 6, 7, 23, 47, 38)", 'updated': None, 'deleted': None}]
+def test_user():
+    return {'id': 1, 'name': 'test', 'lastname': 'user', 'email': 'angel.pena@gmail.com', 'storage_remaining': "Decimal('10000000')", 'password': '5F4DCC3B5AA765D61D8327DEB882CF99', 'image_uri': None, 'thumbnail_uri': None, 'created': "datetime.datetime(2020, 6, 7, 23, 47, 38)", 'updated': None, 'deleted': None}
+
+
+@pytest.fixture(scope="module")
+def test_folder_object():
+    return {'id': 1, 'name': 'testfolder', 'owner_id': 1, 'parent_id': None , 'created': "datetime.datetime(2020, 6, 7, 23, 47, 38)", 'updated': None, 'deleted': None}
