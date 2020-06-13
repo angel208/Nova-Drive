@@ -1,6 +1,7 @@
 ## Something that is untested is broken.
 import pytest
 from mock import patch
+
 from novadrive.api.v1.services import user_manager as user_manager
 
 ##--------- begin of tests
