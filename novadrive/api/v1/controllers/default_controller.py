@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_restx  import Api, Resource, fields
-from ..database import user
+from ..services import user_manager
 import os
 
 

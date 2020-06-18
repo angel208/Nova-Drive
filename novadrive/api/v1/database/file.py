@@ -18,10 +18,22 @@ def get_file( id ):
 
     with sql.DBConnection() as sql_connection:
         
-        query = "SELECT * FROM file WHERE id = %s"
-        val = (id, )
+        query = "SELECT * FROM file WHERE id = %s AND deleted IS %s"
+        val = (id, None)
 
         sql_connection.execute(query, val)
         result = sql_connection.fetchone()
 
         return result
+
+def soft_delete_file( id ):
+
+    with sql.DBConnection() as sql_connection:
+        
+        query = "UPDATE file SET deleted = NOW() WHERE id = %s"
+        val = ( id, )
+
+        sql_connection.execute(query, val)
+        
+        return sql_connection.rowcount
+
