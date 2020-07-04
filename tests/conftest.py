@@ -32,3 +32,17 @@ def test_folder_object_2():
 @pytest.fixture(scope="module")
 def test_file_object():
     return {'id': 1, 'name': 'testfile', 'type':'image/png', 'user_id': 1, 'filesize': 100 , 'file_uri' : 'file/uri/1', 'thumbnail_uri' : 'thumbnail/uri/1', 'folder_id': 1 , 'created': "datetime.datetime(2020, 6, 7, 23, 47, 38)", 'updated': None, 'deleted': None}
+
+
+@pytest.fixture()
+def test_marshmallow_validation_errors():
+    
+    errors = [
+
+        {},
+        {'namex': ['Unknown field.'], 'asd': ['Unknown field.']},
+        {'name': ['Missing data for required field.'], 'namex': ['Unknown field.'], 'asd': ['Unknown field.']}
+
+    ]
+
+    return errors
