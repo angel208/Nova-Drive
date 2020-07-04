@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, INCLUDE
 
 class FileModel(object):
     def __init__( self, name, type, folder_id, user_id, file_uri, thumbnail_uri = ''   , filesize = 0 ):
@@ -11,6 +11,7 @@ class FileSchema( Schema ):
     #this makes the response have the same order as defined in code
     class Meta:
         ordered = True
+        unknown = INCLUDE
 
     id = fields.Integer() 
 

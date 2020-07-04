@@ -1,9 +1,10 @@
 from flask import Flask, request 
-from flask_restx  import Api, Resource,  reqparse, fields
+from flask_restx  import Api, Resource,  reqparse, fields, abort
 from marshmallow import Schema
 from ..services import file_manager
-from ..utils import marshmallow_utils
-import os, json 
+from ..utils import marshmallow_utils, aux_functions
+
+import os, json
 
 from ..marshmallow_schemas.file import FileSchema
 
@@ -61,17 +62,25 @@ class FilesController(Resource):
 
         #get data and file
         request_data = json.loads(request.form.get('data'))
-        request_file = request.files['file']
+        
+        if 'file' in request.files:
+            request_file = request.files['file']
+        else:
+            abort( 400, 'Bad Request: missing file in request body.' )
 
         #validate data
         marshmallow_validation = FileSchema().validate(request_data)
         validation_error = marshmallow_utils.find_error( marshmallow_validation ) 
 
         if( validation_error != None ):
-            return validation_error, 400
+            abort( 400, 'Bad Request', details=validation_error )
 
-        #validate file and filesize
-
+        #validate filesize
+        file_size = len(request_file.read())
+        app_config_max_size = aux_functions.get_app_config('max_file_size')
+        
+        if( file_size > int(app_config_max_size) ):
+            abort( 400, 'Bad Request: file too big. Current max size of upladed files is ' + app_config_max_size + " Bytes." )
         
         #create file
         created_file_data = file_manager.store_file( request_file, request_data, '1' )
