@@ -7,6 +7,8 @@ from novadrive.api.v1.database import user as user_module
 from novadrive.api.v1.database import folder as folder_module
 from novadrive.api.v1.database import file as file_module
 
+from novadrive.api.v1.utils.errors import ForeignResourceNotFoundException
+
 ##--------- users
 
 def test_get_user(test_user):
@@ -47,7 +49,7 @@ def test_create_file(test_file_object):
 
     name, filetype , folder_id, user_id, file_uri, thumbnail_uri, filesize = itemgetter('name', 'type' , 'folder_id', 'user_id', 'file_uri', 'thumbnail_uri', 'filesize')(test_file_object)
 
-    file_id = file_module.create_file( name, filetype , folder_id, user_id, file_uri, thumbnail_uri )
+    file_id = file_module.store_file_in_db( name, filetype , folder_id, user_id, file_uri, thumbnail_uri )
 
     assert file_id == 1
 
@@ -59,8 +61,8 @@ def test_create_file_unexisting_folder_key(test_file_object):
 
     folder_id = 24
 
-    with pytest.raises( mysqlErrors.IntegrityError ):
-       assert file_module.create_file( name, filetype , folder_id, user_id, file_uri, thumbnail_uri )
+    with pytest.raises( ForeignResourceNotFoundException ):
+       assert file_module.store_file_in_db( name, filetype , folder_id, user_id, file_uri, thumbnail_uri )
 
 
 def test_get_file(test_file_object):

@@ -16,6 +16,7 @@ mock = "*"
 boto3 = "*"
 flask-marshmallow = "*"
 flask-restplus-marshmallow = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.8"

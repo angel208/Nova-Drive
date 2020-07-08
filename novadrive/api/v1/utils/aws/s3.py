@@ -1,4 +1,4 @@
-from session import s3
+from .session import s3
 from botocore.exceptions import ClientError
 import configparser
 
@@ -10,7 +10,7 @@ bucket_name = config['s3_data']['bucket_name']
 def list_buckets():
     return s3.buckets.all()
 
-def store_file( binary_file, file_name):
+def store_file( binary_file, file_name, file_type):
     """Upload a file to an S3 bucket
 
     :param binary_file: File to upload
@@ -19,7 +19,7 @@ def store_file( binary_file, file_name):
     """
     try:
         object = s3.Object(bucket_name, file_name)
-        object.put(Body = binary_file)
+        object.put(Body = binary_file, ContentType=file_type )
     except ClientError as e:
         print(e)
         return False

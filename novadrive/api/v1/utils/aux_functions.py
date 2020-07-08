@@ -7,3 +7,4 @@ def  get_app_config( config_key ):
     config.read('config.ini')
 
     return config['app_config'][config_key]
+

@@ -1,17 +1,26 @@
 from . import sql_connection as sql
+from mysql.connector.errors import IntegrityError, InterfaceError
+from ..utils.errors import ForeignResourceNotFoundException, DBNotConnectedException
 
+def store_file_in_db( name, filetype, folder_id, user_id, file_uri, thumbnail_uri = '' , filesize = 0):
 
-def create_file( name, filetype, folder_id, user_id, file_uri, thumbnail_uri = '' , filesize = 0):
+    try:
 
-    with sql.DBConnection() as sql_connection:
-        
-        query = "INSERT INTO file (name, type, folder_id, user_id, file_uri, thumbnail_uri, filesize  ) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-        val = (name, filetype , folder_id, user_id, file_uri, thumbnail_uri, filesize)
+        with sql.DBConnection() as sql_connection:
+            
+            query = "INSERT INTO file (name, type, folder_id, user_id, file_uri, thumbnail_uri, filesize  ) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            val = (name, filetype , folder_id, user_id, file_uri, thumbnail_uri, filesize)
 
-        sql_connection.execute(query, val)
-        inserted_row_id = sql_connection.lastrowid
+            
+            sql_connection.execute(query, val)
+            inserted_row_id = sql_connection.lastrowid
 
-        return inserted_row_id
+            return inserted_row_id
+    
+    except IntegrityError as e:
+        raise ForeignResourceNotFoundException( e.msg )
+    except InterfaceError as e:
+        raise DBNotConnectedException()
 
 
 def get_file( id ):
