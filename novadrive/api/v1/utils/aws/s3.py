@@ -1,5 +1,6 @@
 from .session import s3
 from botocore.exceptions import ClientError
+from ..errors import S3StoreException
 import configparser
 
 #get bucket name from config file
@@ -23,6 +24,7 @@ def store_file( binary_file, file_name, file_type):
     except ClientError as e:
         print(e)
         return False
+
     return True
 
 def get_file( file_name ):
@@ -37,7 +39,7 @@ def get_file( file_name ):
         stored_file = object.get()
     except ClientError as e:
         print(e)
-        return None
+        return S3StoreException()
 
     return stored_file['Body'].read()
 

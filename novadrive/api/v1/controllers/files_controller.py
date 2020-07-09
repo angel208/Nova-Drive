@@ -5,8 +5,7 @@ import os, json
 
 from ..utils.errors import find_error, ForeignResourceNotFoundException, DBNotConnectedException
 from ..services import file_manager
-from ..utils import aux_functions
-from ..utils.file_helpers import get_file_size
+from ..utils import aux_functions, file_helpers
 from ..marshmallow_schemas.file import FileSchema
 
 
@@ -60,8 +59,19 @@ class FilesController(Resource):
     @api.doc(responses={ 404: 'Folder or user not found',  401: 'Unauthorized', 403: 'Forbiden', 503: 'Service Unavailable' })
     def post(self):
 
-        #get data and file
-        request_data = json.loads(request.form.get('data'))
+        #get and validate data
+        try:
+            request_data = json.loads(request.form.get('data'))
+        except TypeError:
+            abort( 400, 'Bad Request. Incorrect Json.' )
+
+        marshmallow_validation = FileSchema().validate(request_data)
+        validation_error = find_error( marshmallow_validation ) 
+        
+        if( validation_error != None ):
+            abort( 400, 'Bad Request.', details=validation_error )
+        
+        #get and validate file
         request_file = None
         
         if 'file' in request.files:
@@ -69,29 +79,23 @@ class FilesController(Resource):
         else:
             abort( 400, 'Bad Request: missing file in request body.' )
 
-        #validate data
-        marshmallow_validation = FileSchema().validate(request_data)
-        validation_error = find_error( marshmallow_validation ) 
-        
-        if( validation_error != None ):
-            abort( 400, 'Bad Request', details=validation_error )
-
-        #validate filesize
-        file_size = get_file_size(request_file)
+        file_size = file_helpers.get_file_size(request_file)
         app_config_max_size = aux_functions.get_app_config('max_file_size')
         
         if( file_size > int(app_config_max_size) ):
             abort( 400, 'Bad Request: file too big. Current max size of upladed files is ' + app_config_max_size + " Bytes." )
         
-        #create file
+        #store file
         try:
             created_file_data = file_manager.store_file( request_file, request_data, '1' )
         except ForeignResourceNotFoundException as e:
             abort( 404, e.message )
-        except DBNotConnectedException as e:
+        except ( DBNotConnectedException, S3StoreException) as e:
             abort( 500, e.message )
-
-        file_schema = FileSchema()
-        return file_schema.dump( created_file_data ), 201
+        except Exception as e:
+            abort( 500, e)
+        else:
+            file_schema = FileSchema()
+            return file_schema.dump( created_file_data ), 201
 
 

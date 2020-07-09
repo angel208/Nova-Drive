@@ -30,7 +30,7 @@ def store_file( request_file, request_data, user ):
     s3.store_file( request_file, internal_file_name, file_type )
 
     #store file info in db
-    created_file_id = store_file_in_db(   name = file_name, 
+    created_file_id = store_file_in_db(     name = file_name, 
                                             filetype = file_type, 
                                             folder_id = folder_id, 
                                             user_id = user_id, 

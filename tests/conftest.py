@@ -46,3 +46,45 @@ def test_marshmallow_validation_errors():
     ]
 
     return errors
+
+
+@pytest.fixture()
+def correct_post_file_response():
+
+    return { "id": 28, "name": "asd", "folder_id": 1, "type": "text/plain", "filesize": 190,  "user_id": 1, "file_uri": "20200709032025_asd", "thumbnail_uri": "",  "created": "2020-07-09T03:20:26", "updated": null, "deleted": null }
+
+
+@pytest.fixture()
+def correct_post_file_request_data():
+    return {"name":"asd",
+            "type" : "1",
+            "folder_id":"1",
+            "asd":"asd"}
+
+@pytest.fixture()
+def post_file_request_data_missing_field():
+    return {"type" : "1",
+            "folder_id":"1",
+            "asd":"asd"}
+
+@pytest.fixture()
+def post_file_request_data_unexisting_folder():
+    return {"name":"asd",
+            "type" : "1",
+            "folder_id":"1000",
+            "asd":"asd"}
+
+@pytest.fixture()
+def post_file_mocked_result():
+    return {
+            "id": 28,
+            "name": "asd",
+            "folder_id": 1,
+            "type": "text/plain",
+            "filesize": 190,
+            "user_id": 1,
+            "file_uri": "20200709032025_asd",
+            "thumbnail_uri": ""
+        }
+
+
