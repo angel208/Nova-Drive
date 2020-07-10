@@ -7,7 +7,7 @@ from novadrive.api.v1.database import user as user_module
 from novadrive.api.v1.database import folder as folder_module
 from novadrive.api.v1.database import file as file_module
 
-from novadrive.api.v1.utils.errors import ForeignResourceNotFoundException
+from novadrive.api.v1.utils.errors import ForeignResourceNotFoundException, ResourceNotFoundException
 
 ##--------- users
 
@@ -112,9 +112,8 @@ def test_get_sotf_deleted_file(test_file_object):
 
     file_id = itemgetter('id')(test_file_object)
 
-    fetched_file = file_module.get_file( id = file_id )
-
-    assert fetched_file == None
+    with pytest.raises( ResourceNotFoundException ):
+        assert  file_module.get_file( id = file_id )
 
 #----------delete folder
 

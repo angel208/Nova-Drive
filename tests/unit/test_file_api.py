@@ -4,7 +4,7 @@ from mock import patch
 
 ##--------- begin of tests
 
-def test_api_file_with_missing_field_in_json( test_app, post_file_request_data_missing_field ):
+def test_api_store_file_with_missing_field_in_json( test_app, post_file_request_data_missing_field ):
 
     headers= {}
     payload = {'data': json.dumps(post_file_request_data_missing_field) }
@@ -15,7 +15,7 @@ def test_api_file_with_missing_field_in_json( test_app, post_file_request_data_m
     assert b"Missing data for required field." in response.data 
 
 
-def test_api_file_with_json_and_no_file( test_app, correct_post_file_request_data ):
+def test_api_store_file_with_json_and_no_file( test_app, correct_post_file_request_data ):
 
     headers= {}
     payload = {'data': json.dumps(correct_post_file_request_data) }
@@ -27,7 +27,7 @@ def test_api_file_with_json_and_no_file( test_app, correct_post_file_request_dat
     
 
 
-def test_api_file_no_json_and_no_file( test_app ):
+def test_api_store_file_no_json_and_no_file( test_app ):
 
     response = test_app.post("/api/v1/files/")
 
@@ -35,7 +35,7 @@ def test_api_file_no_json_and_no_file( test_app ):
     
 
 @patch('novadrive.api.v1.controllers.files_controller.file_manager.store_file')
-def test_api_file_correct_payload( mock_store_file, test_app, correct_post_file_request_data, post_file_mocked_result):
+def test_api_store_file_correct_payload( mock_store_file, test_app, correct_post_file_request_data, post_file_mocked_result):
 
     #mock store function
     mock_store_file.return_value = post_file_mocked_result
@@ -54,7 +54,7 @@ def test_api_file_correct_payload( mock_store_file, test_app, correct_post_file_
 
 
 
-def test_api_file_with_unexisting_folder( test_app, post_file_request_data_unexisting_folder):
+def test_api_store_file_with_unexisting_folder( test_app, post_file_request_data_unexisting_folder):
 
     #make api call
     payload = {
@@ -67,5 +67,25 @@ def test_api_file_with_unexisting_folder( test_app, post_file_request_data_unexi
 
     assert response.status_code == 404
     assert b"Folder with given id doesn't exists" in response.data
+
+
+  
+def test_api_get_file_with_unexisting_file( test_app ):
+
+    response = test_app.get("/api/v1/files/455")
+
+    assert response.status_code == 404 
+
+
+@patch('novadrive.api.v1.controllers.files_controller.file_manager.get_file_data')
+def test_api_get_file_correct( mock_get_file_data, test_app, post_file_mocked_result):
+
+    #mock store function
+    mock_get_file_data.return_value = json.dumps(post_file_mocked_result)
+
+    response = test_app.get("/api/v1/files/2")
+
+    assert response.status_code == 200 
+
 
 

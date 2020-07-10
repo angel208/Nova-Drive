@@ -3,7 +3,7 @@ from flask_restx  import Api, Resource,  reqparse, fields, abort
 from marshmallow import Schema
 import os, json
 
-from ..utils.errors import find_error, ForeignResourceNotFoundException, DBNotConnectedException
+from ..utils.errors import find_error, ForeignResourceNotFoundException, DBNotConnectedException, ResourceNotFoundException
 from ..services import file_manager
 from ..utils import aux_functions, file_helpers
 from ..marshmallow_schemas.file import FileSchema
@@ -45,11 +45,18 @@ class FilesResource(Resource):
     @api.doc(responses={ 404: 'File not found',  401: 'Unauthorized', 403: 'Forbiden', 503: 'Service Unavailable' })
     def get(self, id):
 
-        file_data = file_manager.get_file_data( id )
-
-        file_schema = FileSchema()
-                
-        return file_schema.dump( file_data )
+        try:
+            file_data = file_manager.get_file_data( id )
+            file_schema = FileSchema()
+            return_data = file_schema.dump( file_data )
+        except ResourceNotFoundException as e:
+            abort( 404, e.message )
+        except ( DBNotConnectedException) as e:
+            abort( 500, e.message )
+        except Exception as e:
+            abort( 500, e)
+        else:
+            return return_data, 200
 
 
 @name_space.route('/')
