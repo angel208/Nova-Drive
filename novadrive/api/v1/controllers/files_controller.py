@@ -58,6 +58,21 @@ class FilesResource(Resource):
         else:
             return return_data, 200
 
+    @name_space.response(204, 'No Content' ) 
+    @api.doc(responses={ 404: 'File not found',  401: 'Unauthorized', 403: 'Forbiden', 503: 'Service Unavailable' })
+    def delete(self, id):
+
+        try:
+            file_data = file_manager.soft_delete_file( id )
+        except ResourceNotFoundException as e:
+            abort( 404, e.message )
+        except ( DBNotConnectedException) as e:
+            abort( 500, e.message )
+        except Exception as e:
+            abort( 500, e)
+        else:
+            return {}, 204
+
 
 @name_space.route('/')
 class FilesController(Resource):

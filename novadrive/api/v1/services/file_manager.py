@@ -1,10 +1,13 @@
-from ..database.file import get_file, store_file_in_db
+from ..database.file import get_file, store_file_in_db, soft_delete_file as delete_file_from_db
 from ..utils import file_helpers
 from ..utils.aws import s3
 
 
 def get_file_data( id ):
     return get_file(id)
+
+def soft_delete_file( id ):
+    return delete_file_from_db(id)
 
 def store_file( request_file, request_data, user ):
 

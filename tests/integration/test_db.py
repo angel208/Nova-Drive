@@ -22,7 +22,7 @@ def test_create_folder(test_folder_object):
 
     name, parent_id, owner_id = itemgetter('name', 'parent_id', 'owner_id')(test_folder_object)
 
-    folder_id = folder_module.create_folder( name, parent_id, owner_id )
+    folder_id = folder_module.store_folder_in_db( name, parent_id, owner_id )
 
     assert folder_id == 1
 
@@ -32,8 +32,8 @@ def test_create_folder_unexisting_parent_key(test_folder_object):
     name, parent_id, owner_id = itemgetter('name', 'parent_id', 'owner_id')(test_folder_object)
     parent_id = 24
 
-    with pytest.raises( mysqlErrors.IntegrityError ):
-       assert folder_module.create_folder( name, parent_id, owner_id )
+    with pytest.raises( ForeignResourceNotFoundException ):
+       assert folder_module.store_folder_in_db( name, parent_id, owner_id )
 
 def test_get_folder(test_folder_object):
 
@@ -77,7 +77,7 @@ def test_get_file(test_file_object):
 def test_get_child_folder(test_folder_object, test_folder_object_2):
 
     child_name, child_parent_id, child_owner_id = itemgetter('name', 'parent_id', 'owner_id')(test_folder_object_2)
-    folder_module.create_folder( child_name, child_parent_id, child_owner_id )
+    folder_module.store_folder_in_db( child_name, child_parent_id, child_owner_id )
 
     parent_folder_id = test_folder_object["id"]
 
@@ -131,9 +131,9 @@ def test_get_soft_deleted_folder(test_folder_object_2):
 
     folder_id = itemgetter('id')(test_folder_object_2)
 
-    fetched_folder = folder_module.get_folder( folder_id = folder_id )
+    with pytest.raises( ResourceNotFoundException ):
+        fetched_folder = folder_module.get_folder( folder_id = folder_id )
 
-    assert fetched_folder == None
 
 #---------files and folders inside a parent folder afer delete
 

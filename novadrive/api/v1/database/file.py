@@ -46,12 +46,20 @@ def get_file( id ):
 
 def soft_delete_file( id ):
 
-    with sql.DBConnection() as sql_connection:
-        
-        query = "UPDATE file SET deleted = NOW() WHERE id = %s"
-        val = ( id, )
+    try:
+        with sql.DBConnection() as sql_connection:
+            
+            query = "UPDATE file SET deleted = NOW() WHERE id = %s"
+            val = ( id, )
 
-        sql_connection.execute(query, val)
-        
-        return sql_connection.rowcount
+            sql_connection.execute(query, val)
 
+            affected_rows = sql_connection.rowcount
+            
+            if( affected_rows == 0 ):
+                raise ResourceNotFoundException("File with id '" + str(id) + "' not found.")
+
+            return affected_rows
+
+    except InterfaceError as e:
+        raise DBNotConnectedException()
