@@ -79,7 +79,7 @@ def soft_delete_folder( folder_id ):
 def list_child_folders( folder_id ):
     
     try:
-        
+
         with sql.DBConnection() as sql_connection:
             
             query = "SELECT * FROM folder WHERE parent_id = %s AND deleted IS %s"
@@ -94,6 +94,7 @@ def list_child_folders( folder_id ):
         raise ForeignResourceNotFoundException( e.msg )
     except InterfaceError as e:
         raise DBNotConnectedException()
+    
         
 def list_files_of_folder( folder_id ):
     

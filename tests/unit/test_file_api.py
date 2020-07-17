@@ -34,7 +34,7 @@ def test_api_store_file_no_json_and_no_file( test_app ):
     assert response.status_code == 400  
     
 
-@patch('novadrive.api.v1.controllers.files_controller.file_manager.store_file')
+@patch('novadrive.api.v1.controllers.file_controller.file_manager.store_file')
 def test_api_store_file_correct_payload( mock_store_file, test_app, correct_post_file_request_data, post_file_mocked_result):
 
     #mock store function
@@ -77,7 +77,7 @@ def test_api_get_file_with_unexisting_file( test_app ):
     assert response.status_code == 404 
 
 
-@patch('novadrive.api.v1.controllers.files_controller.file_manager.get_file_data')
+@patch('novadrive.api.v1.controllers.file_controller.file_manager.get_file_data')
 def test_api_get_file_correct( mock_get_file_data, test_app, post_file_mocked_result):
 
     #mock store function
