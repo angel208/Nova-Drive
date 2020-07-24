@@ -74,7 +74,7 @@ class FilesResource(Resource):
             return {}, 204
 
 
-@name_space.route('/')
+@name_space.route('/', strict_slashes = False)
 class FilesController(Resource):
 
     @name_space.response(400, 'Bad Request or filesize too big for remaining storage')

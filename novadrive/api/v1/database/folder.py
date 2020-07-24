@@ -34,7 +34,7 @@ def get_folder( folder_id ):
             result = sql_connection.fetchone()
 
             if not result:
-                raise ResourceNotFoundException("Folder with id '" + str(id) + "' not found.")
+                raise ResourceNotFoundException("Folder with id '" + str(folder_id) + "' not found.")
 
             return result
 
@@ -70,7 +70,7 @@ def soft_delete_folder( folder_id ):
         affected_rows = sql_connection.rowcount
             
         if( affected_rows == 0 ):
-            raise ResourceNotFoundException("Folder with id '" + str(id) + "' not found.")
+            raise ResourceNotFoundException("Folder with id '" + str(folder_id) + "' not found.")
 
         return affected_rows
 
@@ -87,6 +87,9 @@ def list_child_folders( folder_id ):
 
             sql_connection.execute(query, val)
             result = sql_connection.fetchall()
+
+            if not result:
+                raise ResourceNotFoundException("Folder with id '" + str(folder_id) + "' not found.")
 
             return result
         
@@ -107,6 +110,9 @@ def list_files_of_folder( folder_id ):
 
             sql_connection.execute(query, val)
             result = sql_connection.fetchall()
+
+            if not result:
+                raise ResourceNotFoundException("Folder with id '" + str(folder_id) + "' not found.")
 
             return result
 

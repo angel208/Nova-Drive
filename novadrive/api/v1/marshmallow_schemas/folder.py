@@ -1,4 +1,5 @@
 from marshmallow import Schema, fields, post_load, INCLUDE
+from .file import FileSchema
 
 class FolderModel(object):
     
@@ -22,7 +23,11 @@ class FolderSchema( Schema ):
     created =  fields.DateTime( ) 
     updated =  fields.DateTime() 
     deleted =  fields.DateTime() 
-    
+
+     
+    files   = fields.List( fields.Nested(FileSchema) )
+    folders = fields.List( fields.Nested( lambda: FolderSchema() ) )
+
 
     @post_load
     def create_folder(self, data):

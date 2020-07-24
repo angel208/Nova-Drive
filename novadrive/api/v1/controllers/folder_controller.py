@@ -1,5 +1,5 @@
-from flask import Flask, request 
-from flask_restx  import Api, Resource,  reqparse, fields, abort
+from flask import Flask, request,redirect
+from flask_restx  import Api, Resource,  reqparse, fields, abort 
 from marshmallow import Schema
 import os, json
 
@@ -29,7 +29,6 @@ post_folder_model = name_space.model('Post Folder', {
     'name': fields.String,
     'parent_id':  fields.Integer,
 })
-
 
 @name_space.route('/<int:id>')
 @api.doc(params={'id': 'Folder id'})
@@ -68,7 +67,7 @@ class FoldersResource(Resource):
             return {}, 204
 
 
-@name_space.route('/')
+@name_space.route('/', strict_slashes = False)
 class FoldersController(Resource):
 
     @name_space.response(400, 'Bad Request')
@@ -103,3 +102,26 @@ class FoldersController(Resource):
         else:
             folder_schema =  FolderSchema()
             return folder_schema.dump( created_folder_data ), 201
+
+
+
+@name_space.route('/<int:id>/files')
+@api.doc(params={'id': 'Folder id'})
+class FoldersResource(Resource):
+
+    @name_space.response(200, 'Ok', folder_model)
+    @api.doc(responses={ 404: 'Folder not found',  401: 'Unauthorized', 403: 'Forbiden', 503: 'Service Unavailable' })
+    def get(self, id):
+
+        try:
+            folder = folder_manager.get_folder_content( id )
+            folder_schema = FolderSchema()
+            return_data = folder_schema.dump( folder )
+        except ResourceNotFoundException as e:
+            abort( 404, e.message )
+        except ( DBNotConnectedException) as e:
+            abort( 500, e.message )
+        except Exception as e:
+            abort( 500, e)
+        else:
+            return return_data, 200

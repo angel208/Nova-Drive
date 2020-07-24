@@ -6,6 +6,17 @@ from ..utils.aws import s3
 def get_folder_data( id ):
     return get_folder(id)
 
+
+def get_folder_content( id ):
+    folder = get_folder(id)
+    childs = list_child_folders(id)
+    files = list_files_of_folder(id)
+
+    folder['files']   = files
+    folder['folders'] = childs
+
+    return folder
+
 def delete_folder( id ):
     return soft_delete_folder(id)
 

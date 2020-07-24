@@ -8,6 +8,7 @@ from novadrive.nova import blueprint as nova_api
 def create_app( environment = 'DEV' ):
     #creates flask app
     flask_app  = Flask(__name__)
+    #disable the default 404 error, so we can return our own message
     flask_app.config['ERROR_404_HELP'] = False
 
     os.environ['NOVA_ENV'] = environment
