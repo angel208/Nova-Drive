@@ -2,14 +2,21 @@ from . import sql_connection as sql
 
 
 def get_user( id ):
+    try:
+        with sql.DBConnection() as sql_connection:
+            
+            query = "SELECT * FROM user WHERE id = %s"
+            val = (id,)
 
-    with sql.DBConnection() as sql_connection:
-        
-        query = "SELECT * FROM user WHERE id = %s"
-        val = (id,)
+            sql_connection.execute(query, val)
+            result = sql_connection.fetchone()
 
-        sql_connection.execute(query, val)
-        result = sql_connection.fetchone()
+            if not result:
+                raise ResourceNotFoundException("User with id '" + str(id) + "' not found.")
 
-        return result
+            return result
 
+    except IntegrityError as e:
+        raise ForeignResourceNotFoundException( e.msg )
+    except InterfaceError as e:
+        raise DBNotConnectedException()

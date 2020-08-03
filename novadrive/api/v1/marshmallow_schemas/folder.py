@@ -5,7 +5,8 @@ class FolderModel(object):
     
     def __init__( self, name, parent_id, owner_id ):
         self.name = name
-        self.parent_id = parent_id 
+        self.parent_id = parent_id
+        self.owner_id = owner_id  
 
 class FolderSchema( Schema ):
 

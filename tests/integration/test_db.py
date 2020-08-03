@@ -141,6 +141,5 @@ def test_get_child_folder_after_soft_delete(test_folder_object):
 
     parent_folder_id = test_folder_object["id"]
 
-    fetched_child_folders = folder_module.list_child_folders( folder_id = parent_folder_id )
-
-    assert fetched_child_folders == []
+    with pytest.raises( ResourceNotFoundException ):
+        fetched_child_folders = folder_module.list_child_folders( folder_id = parent_folder_id )
