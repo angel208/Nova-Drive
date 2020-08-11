@@ -9,15 +9,14 @@ from novadrive.api.v1.database import file as file_module
 
 from novadrive.api.v1.utils.errors import ForeignResourceNotFoundException, ResourceNotFoundException
 
-##--------- users
+##================ GET USER ================
 
 def test_get_user(test_user):
-
     user = user_module.get_user( id = 1 )
     assert user['name'] == test_user['name']
 
-#----------folders
 
+##================ POST FOLDER ================
 def test_create_folder(test_folder_object):
 
     name, parent_id, owner_id = itemgetter('name', 'parent_id', 'owner_id')(test_folder_object)
@@ -35,15 +34,14 @@ def test_create_folder_unexisting_parent_key(test_folder_object):
     with pytest.raises( ForeignResourceNotFoundException ):
        assert folder_module.store_folder_in_db( name, parent_id, owner_id )
 
+##================ GET FOLDER ================
+
 def test_get_folder(test_folder_object):
-
     folder_id = itemgetter('id')(test_folder_object)
-
     folder = folder_module.get_folder( folder_id = folder_id )
-
     assert folder['name'] == test_folder_object['name']
 
-#-----files
+##================ POST FILE ================
 
 def test_create_file(test_file_object):
 
@@ -52,7 +50,6 @@ def test_create_file(test_file_object):
     file_id = file_module.store_file_in_db( name, filetype , folder_id, user_id, file_uri, thumbnail_uri )
 
     assert file_id == 1
-
 
 
 def test_create_file_unexisting_folder_key(test_file_object):
@@ -64,16 +61,16 @@ def test_create_file_unexisting_folder_key(test_file_object):
     with pytest.raises( ForeignResourceNotFoundException ):
        assert file_module.store_file_in_db( name, filetype , folder_id, user_id, file_uri, thumbnail_uri )
 
+##================ GET FILE ================
 
 def test_get_file(test_file_object):
-
     file_id = itemgetter('id')(test_file_object)
-
     fetched_file = file_module.get_file( id = file_id )
-
     assert fetched_file['name'] == test_file_object['name']
 
-#---------files and folders inside a parent folder
+##================ CHILD FILES/FOLDERS ================
+#files and folders inside a parent folder
+
 def test_get_child_folder(test_folder_object, test_folder_object_2):
 
     child_name, child_parent_id, child_owner_id = itemgetter('name', 'parent_id', 'owner_id')(test_folder_object_2)
@@ -87,24 +84,16 @@ def test_get_child_folder(test_folder_object, test_folder_object_2):
 
 
 def test_get_files_of_folder(test_folder_object, test_file_object):
-
     folder_id = test_folder_object["id"]
-
     fetched_files = folder_module.list_files_of_folder( folder_id = folder_id )
-
     assert fetched_files[0]['name'] == test_file_object['name']
 
 
-
-
-#---------delete file
+##================ DELETE FILE ================
 
 def test_soft_delete_file(test_file_object):
-
     file_id = itemgetter('id')(test_file_object)
-
     affected_rows = file_module.soft_delete_file( id = file_id )
-
     assert affected_rows == 1
 
 
@@ -115,16 +104,12 @@ def test_get_sotf_deleted_file(test_file_object):
     with pytest.raises( ResourceNotFoundException ):
         assert  file_module.get_file( id = file_id )
 
-#----------delete folder
 
-
+##================ DELETE FOLDER ================
 
 def test_soft_delete_folder(test_folder_object_2):
-
     folder_id = test_folder_object_2["id"]
-
     affected_rows = folder_module.soft_delete_folder( folder_id = folder_id )
-
     assert affected_rows == 1
 
 def test_get_soft_deleted_folder(test_folder_object_2):
@@ -135,7 +120,7 @@ def test_get_soft_deleted_folder(test_folder_object_2):
         fetched_folder = folder_module.get_folder( folder_id = folder_id )
 
 
-#---------files and folders inside a parent folder afer delete
+##================ CHILD FOLDER AFER SOFT DELETE  ================
 
 def test_get_child_folder_after_soft_delete(test_folder_object):
 

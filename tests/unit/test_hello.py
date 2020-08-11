@@ -1,8 +1,7 @@
 ## Something that is untested is broken.
 import pytest
 
-##--------- begin of tests
-
+##================ SAMPLE API TEST ================
 def test_hello(test_app):
 
     response = test_app.get("/api/v1/")

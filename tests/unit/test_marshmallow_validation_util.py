@@ -3,8 +3,6 @@ import pytest
 
 from novadrive.api.v1.utils import errors as error_module
 
-##--------- begin of tests
-
 def test_marshmallow_validation_errors(test_marshmallow_validation_errors):
 
     errors = test_marshmallow_validation_errors

@@ -2,7 +2,7 @@
 import pytest, os, json, io
 from mock import patch
 
-##--------- begin of tests
+##================ POST FILE ================
 
 def test_api_store_file_with_missing_field_in_json( test_app, post_file_request_data_missing_field ):
 
@@ -69,23 +69,38 @@ def test_api_store_file_with_unexisting_folder( test_app, post_file_request_data
     assert b"Folder with given id doesn't exists" in response.data
 
 
-  
+##================ GET FILE ================  
+
 def test_api_get_file_with_unexisting_id( test_app ):
-
     response = test_app.get("/api/v1/files/455")
-
     assert response.status_code == 404 
 
 
 @patch('novadrive.api.v1.controllers.file_controller.file_manager.get_file_data')
 def test_api_get_file_correct( mock_get_file_data, test_app, post_file_mocked_result):
 
-    #mock store function
+    #mock get function
     mock_get_file_data.return_value = json.dumps(post_file_mocked_result)
-
     response = test_app.get("/api/v1/files/2")
 
     assert response.status_code == 200 
+
+
+##================ DELETE FILE ================
+
+def test_api_soft_delete_file_unexisting_file(  test_app ):
+    response = test_app.delete("/api/v1/files/500")
+    assert response.status_code == 404
+
+@patch('novadrive.api.v1.controllers.file_controller.file_manager.soft_delete_file')
+def test_api_soft_delete_file_correct( mock_soft_delete_file, test_app ):
+
+    #mock delete function
+    mock_soft_delete_file.return_value = {}
+
+    response = test_app.delete("/api/v1/files/2")
+
+    assert response.status_code == 204
 
 
 
