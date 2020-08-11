@@ -47,7 +47,7 @@ def test_marshmallow_validation_errors():
 
     return errors
 
-
+#file fixtures
 @pytest.fixture()
 def correct_post_file_response():
 
@@ -88,3 +88,66 @@ def post_file_mocked_result():
         }
 
 
+#folder fixtures
+@pytest.fixture()
+def correct_post_folder_response():
+    return {
+        "id": 34,
+        "name": "asd",
+        "parent_id": 12,
+        "owner_id": 1
+    }
+
+
+@pytest.fixture()
+def correct_post_folder_request_data():
+    return { 
+        "name": "asd",
+        "parent_id": "12",
+        "asd": "ad"
+    }
+
+@pytest.fixture()
+def post_folder_request_data_missing_field():
+    return {
+        "parent_id": "12",
+	    "asd": "ad"
+    }
+
+
+
+@pytest.fixture()
+def post_folder_request_data_unexisting_parent():
+    return {
+        "name": "asd",
+        "parent_id": "120",
+        "asd": "ad"
+    }
+
+@pytest.fixture()
+def post_folder_mocked_result():
+    return {
+            "id": 34,
+            "name": "asd",
+            "parent_id": 12,
+            "owner_id": 1
+        }
+
+#user fixtures
+@pytest.fixture()
+def mocked_user_response():
+    return {
+        "id": 1,
+        "name": "angel",
+        "email": "angel@gmail.com",
+        "root_folder_id": 1
+    }
+
+@pytest.fixture()
+def correct_user_response():
+    return {
+        "id": 1,
+        "name": "angel",
+        "email": "angel@gmail.com",
+        "root_folder_id": 1
+    }

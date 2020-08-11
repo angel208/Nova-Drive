@@ -1,4 +1,6 @@
 from . import sql_connection as sql
+from mysql.connector.errors import IntegrityError, InterfaceError
+from ..utils.errors import ForeignResourceNotFoundException, DBNotConnectedException, ResourceNotFoundException
 
 
 def get_user( id ):

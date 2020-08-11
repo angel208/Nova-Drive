@@ -70,7 +70,7 @@ def test_api_store_file_with_unexisting_folder( test_app, post_file_request_data
 
 
   
-def test_api_get_file_with_unexisting_file( test_app ):
+def test_api_get_file_with_unexisting_id( test_app ):
 
     response = test_app.get("/api/v1/files/455")
 
