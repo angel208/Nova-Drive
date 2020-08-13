@@ -2,4 +2,6 @@
 /.vscode
 /.pytest_cache
 /Docs
+/logs/*.log
+/logs/*.log.*
 .env

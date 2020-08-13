@@ -2,7 +2,6 @@ from flask import Flask, Blueprint, g
 from flask_restx  import Api, Resource, fields
 import configparser, os
 
-
 from novadrive.nova import blueprint as nova_api
 
 def create_app( environment = 'DEV' ):
