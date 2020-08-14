@@ -25,6 +25,7 @@ file_model = name_space.model('File', {
     'user_id':  fields.Integer,
     'file_uri':  fields.String,
     'thumbnail_uri':  fields.String,
+    'md5':  fields.String,
     'created':  fields.DateTime(dt_format='rfc822'),
     'updated':  fields.DateTime(dt_format='rfc822'),
     'deleted':  fields.DateTime(dt_format='rfc822'),

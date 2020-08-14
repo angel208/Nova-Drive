@@ -19,6 +19,9 @@ default_handler.setFormatter(default_formatter)
 rest_handler = RotatingFileHandler( 'logs/rest.log' , mode='a', maxBytes=10000, backupCount=5, encoding=None, delay=0)
 rest_handler.setFormatter(default_formatter)
 
+login_handler = RotatingFileHandler( 'logs/login.log' , mode='a', maxBytes=10000, backupCount=5, encoding=None, delay=0)
+login_handler.setFormatter(default_formatter)
+
 #console handlers
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setFormatter(default_formatter)
@@ -27,8 +30,11 @@ stdout_handler.setFormatter(default_formatter)
 
 #set levels
 test_handler.setLevel(logging.DEBUG)
+
 error_handler.setLevel(logging.ERROR)
 default_handler.setLevel(logging.DEBUG)
 rest_handler.setLevel(logging.INFO)
+login_handler.setLevel(logging.INFO)
+
 stdout_handler.setLevel(logging.DEBUG)
 

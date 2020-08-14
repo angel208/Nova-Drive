@@ -26,3 +26,11 @@ api.add_namespace(user_ns)
 
 
 
+from logs.handlers import test_handler, stdout_handler
+import logging
+
+logger = logging.getLogger(__name__)
+logger.addHandler( test_handler )
+logger.addHandler( stdout_handler )
+
+logger.warning('This is a warning')

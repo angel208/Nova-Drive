@@ -1,5 +1,6 @@
 from datetime import datetime
 from PIL import Image
+import hashlib
 
 #checks if request file is image
 def check_if_image( file_type ):
@@ -34,3 +35,17 @@ def get_file_size(fobj):
 
     # in-memory file object that doesn't support seeking or tell
     return 0  #assume small enough
+
+
+def calculate_md5(file):
+
+    pos = file.tell()
+
+    hash_md5 = hashlib.md5()
+
+    for chunk in iter(lambda: file.read(4096), b""):
+        hash_md5.update(chunk)
+
+    file.seek(pos)  # back to original position
+
+    return hash_md5.hexdigest()

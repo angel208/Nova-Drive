@@ -22,6 +22,7 @@ class FileSchema( Schema ):
     user_id =  fields.Integer() 
     file_uri =  fields.String() 
     thumbnail_uri =  fields.String() 
+    md5 =  fields.String() 
     created =  fields.DateTime( ) 
     updated =  fields.DateTime() 
     deleted =  fields.DateTime() 

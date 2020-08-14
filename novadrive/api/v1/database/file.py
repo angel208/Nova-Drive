@@ -2,14 +2,14 @@ from . import sql_connection as sql
 from mysql.connector.errors import IntegrityError, InterfaceError
 from ..utils.errors import ForeignResourceNotFoundException, DBNotConnectedException, ResourceNotFoundException
 
-def store_file_in_db( name, filetype, folder_id, user_id, file_uri, thumbnail_uri = '' , filesize = 0):
+def store_file_in_db( name, filetype, folder_id, user_id, file_uri, thumbnail_uri = '' , filesize = 0, md5 = ''):
 
     try:
 
         with sql.DBConnection() as sql_connection:
             
-            query = "INSERT INTO file (name, type, folder_id, user_id, file_uri, thumbnail_uri, filesize  ) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            val = (name, filetype , folder_id, user_id, file_uri, thumbnail_uri, filesize)
+            query = "INSERT INTO file (name, type, folder_id, user_id, file_uri, thumbnail_uri, filesize, md5  ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (name, filetype , folder_id, user_id, file_uri, thumbnail_uri, filesize, md5)
 
             
             sql_connection.execute(query, val)
