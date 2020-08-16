@@ -3,11 +3,11 @@ from ..utils import file_helpers
 from ..utils.aws import s3
 
 
-def get_file_data( id ):
-    return get_file(id)
+def get_file_data( file_id ):
+    return get_file(file_id)
 
-def soft_delete_file( id ):
-    return delete_file_from_db(id)
+def soft_delete_file( file_id ):
+    return delete_file_from_db(file_id)
 
 def store_file( request_file, request_data, user ):
 
@@ -40,8 +40,7 @@ def store_file( request_file, request_data, user ):
                                             filetype = file_type, 
                                             folder_id = folder_id, 
                                             user_id = user_id, 
-                                            file_uri = internal_user_file_name, 
-                                            thumbnail_uri = '' , 
+                                            internal_filename = internal_user_file_name,
                                             filesize = file_size,
                                             md5 = file_md5
                                             
@@ -52,7 +51,18 @@ def store_file( request_file, request_data, user ):
     #create thumbnail
     #if( file_helpers.check_if_image(file_type) ):
         #image_thumbnail = ""
-
+    
     return get_file( created_file_id )
 
+def download_file( file_id ):
+
+    file_data = get_file(file_id)
+
+    internal_filename = file_data["internal_filename"]
+    file_name = file_data["name"]
+
+    downloaded_file = s3.get_file(internal_filename)
+    downloaded_file['file_name'] = file_name
+
+    return downloaded_file
 

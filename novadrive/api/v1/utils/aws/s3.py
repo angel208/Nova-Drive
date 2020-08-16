@@ -41,6 +41,6 @@ def get_file( file_name ):
         print(e)
         return S3StoreException()
 
-    return stored_file['Body'].read()
+    return { 'body' : stored_file['Body'], 'mime_type' : stored_file['ContentType'] }
 
 

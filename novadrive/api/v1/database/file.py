@@ -2,14 +2,14 @@ from . import sql_connection as sql
 from mysql.connector.errors import IntegrityError, InterfaceError
 from ..utils.errors import ForeignResourceNotFoundException, DBNotConnectedException, ResourceNotFoundException
 
-def store_file_in_db( name, filetype, folder_id, user_id, file_uri, thumbnail_uri = '' , filesize = 0, md5 = ''):
+def store_file_in_db( name, filetype, folder_id, user_id, internal_filename, file_uri = 'unassigned', thumbnail_uri = 'unassigned' , filesize = 0, md5 = ''):
 
     try:
 
         with sql.DBConnection() as sql_connection:
             
-            query = "INSERT INTO file (name, type, folder_id, user_id, file_uri, thumbnail_uri, filesize, md5  ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-            val = (name, filetype , folder_id, user_id, file_uri, thumbnail_uri, filesize, md5)
+            query = "INSERT INTO file (name, type, folder_id,  user_id, internal_filename, file_uri, thumbnail_uri, filesize, md5  ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (name, filetype , folder_id, user_id, internal_filename, file_uri, thumbnail_uri, filesize, md5)
 
             
             sql_connection.execute(query, val)
@@ -21,6 +21,8 @@ def store_file_in_db( name, filetype, folder_id, user_id, file_uri, thumbnail_ur
         raise ForeignResourceNotFoundException( e.msg )
     except InterfaceError as e:
         raise DBNotConnectedException()
+
+
 
 
 def get_file( id ):

@@ -1,9 +1,9 @@
-from flask import Flask, request 
+from flask import Flask, request, send_file
 from flask_restx  import Api, Resource,  reqparse, fields, abort
 from marshmallow import Schema
 import os, json
 
-from ..utils.errors import find_error, ForeignResourceNotFoundException, DBNotConnectedException, ResourceNotFoundException
+from ..utils.errors import find_error, ForeignResourceNotFoundException, DBNotConnectedException, ResourceNotFoundException, S3StoreException
 from ..services import file_manager
 from ..utils import aux_functions, file_helpers
 from ..marshmallow_schemas.file import FileSchema
@@ -122,3 +122,23 @@ class FilesController(Resource):
             return file_schema.dump( created_file_data ), 201
 
 
+@name_space.route('/<int:id>/download/<string:filename>')
+@api.doc(params={'id': 'File id', 'filename': 'name of file to download'})
+class FilesDownload(Resource):
+
+    @name_space.response(200, 'Ok')
+    @api.doc(responses={ 404: 'File not found',  401: 'Unauthorized', 403: 'Forbiden', 503: 'Service Unavailable' })
+    @api.representation('application/octet-stream')
+    def get(self, id, filename):
+
+        try:
+            downloaded_file = file_manager.download_file( id )
+        except ResourceNotFoundException as e:
+            abort( 404, e.message )
+        except ( DBNotConnectedException ) as e:
+            abort( 500, e.message )
+        except Exception as e:
+            abort( 500, e)
+        else:
+            return send_file(downloaded_file['body'], mimetype=downloaded_file['mime_type'])
+            

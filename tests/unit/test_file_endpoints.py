@@ -80,7 +80,7 @@ def test_api_get_file_with_unexisting_id( test_app ):
 def test_api_get_file_correct( mock_get_file_data, test_app, post_file_mocked_result):
 
     #mock get function
-    mock_get_file_data.return_value = json.dumps(post_file_mocked_result)
+    mock_get_file_data.return_value = post_file_mocked_result
     response = test_app.get("/api/v1/files/2")
 
     assert response.status_code == 200 
