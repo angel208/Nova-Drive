@@ -26,7 +26,7 @@ class FileSchema( Schema ):
     updated =  fields.DateTime() 
     deleted =  fields.DateTime() 
 
-    #set file uris in BD
+    #generate file uris
     file_uri = fields.Method("generate_file_url")
     thumbnail_uri =  fields.Method("generate_thumbnail_url")
     

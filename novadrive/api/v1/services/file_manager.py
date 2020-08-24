@@ -46,11 +46,11 @@ def store_file( request_file, request_data, user ):
                                             
                                         )
 
-    #store thumbnail into s3
-
     #create thumbnail
     #if( file_helpers.check_if_image(file_type) ):
         #image_thumbnail = ""
+
+     #store thumbnail into s3
     
     return get_file( created_file_id )
 

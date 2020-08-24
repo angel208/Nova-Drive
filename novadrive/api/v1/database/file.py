@@ -45,6 +45,7 @@ def get_file( id ):
         raise ForeignResourceNotFoundException( e.msg )
     except InterfaceError as e:
         raise DBNotConnectedException()
+    
 
 def soft_delete_file( id ):
 
