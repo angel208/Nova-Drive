@@ -47,17 +47,19 @@ def get_folder( folder_id ):
 def soft_delete_folder( folder_id ):
 
     with sql.DBConnection() as sql_connection:
+
+
         
         #This query sets the folder "deleted" column to the current date
-        #it also updates all the child folders in its hierachy 
+        #it also updates all the child folders in its hierachy (excluding already sofdeleted folders)
         #credits to https://stackoverflow.com/questions/41913460/mysql-recursive-get-all-child-from-parent
         query = """
                 UPDATE folder  
                 JOIN (  select * from 
                             (select * from folder order by parent_id, id) folder,         
                             (select @pv := '%s') initialisation 
-                        where @pv = id
-                        or ( find_in_set(parent_id, @pv) > 0 and @pv := concat(@pv, ',', id) ) 
+                        where ( @pv = id or ( find_in_set(parent_id, @pv) > 0 and @pv := concat(@pv, ',', id) )  )
+                        and deleted is null
                     ) childs 
                 ON (folder.id = childs.id) 
                 SET folder.deleted = now()
