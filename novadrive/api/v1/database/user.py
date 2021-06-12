@@ -22,3 +22,21 @@ def get_user( id ):
         raise ForeignResourceNotFoundException( e.msg )
     except InterfaceError as e:
         raise DBNotConnectedException()
+
+def user_exists( email ):
+    try:
+        with sql.DBConnection() as sql_connection:
+            
+            query = "SELECT * FROM user WHERE email = %s"
+            val = (email,)
+
+            sql_connection.execute(query, val)
+            result = sql_connection.fetchone()
+
+            return result
+
+    except IntegrityError as e:
+        raise ForeignResourceNotFoundException( e.msg )
+    except InterfaceError as e:
+        raise DBNotConnectedException()
+

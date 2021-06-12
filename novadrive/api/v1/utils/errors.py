@@ -6,7 +6,7 @@ class ForeignResourceNotFoundException(Exception):
 
         if( sql_message != None ):
 
-            message = "{} with given id doesn't exists"
+            message = "{} with given id doesn't exists."
 
             resource = re.search( 'REFERENCES `(.*)` \(', sql_message ).group(1).title()
 
@@ -14,7 +14,7 @@ class ForeignResourceNotFoundException(Exception):
             
         else:
 
-            self.message = "Resource not found in the Database"
+            self.message = "Resource not found in the Database."
 
         super().__init__(self.message)
 
@@ -26,7 +26,7 @@ class ResourceNotFoundException(Exception):
 
 class DBNotConnectedException(Exception):
 
-    def __init__(self, message="The database is not connected"):
+    def __init__(self, message="The database is not connected."):
         self.message = message
         super().__init__(self.message)
 
@@ -34,10 +34,16 @@ class DBNotConnectedException(Exception):
 
 class S3StoreException(Exception):
 
-    def __init__(self, message="Could not upload to S3"):
+    def __init__(self, message="Could not upload to S3."):
         self.message = message
         super().__init__(self.message)
 
+
+class UserAlreadyExistsException(Exception):
+
+    def __init__(self, message="User with provided email already exists."):
+        self.message = message
+        super().__init__(self.message)
 
 
 def find_error( marshmallow_error ):

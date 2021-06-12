@@ -7,6 +7,7 @@ from novadrive.api.v1.controllers.default_controller import name_space as nova_n
 from novadrive.api.v1.controllers.file_controller import name_space as file_ns
 from novadrive.api.v1.controllers.folder_controller import name_space as folder_ns
 from novadrive.api.v1.controllers.user_controller import name_space as user_ns
+from novadrive.api.v1.controllers.auth_controller import name_space as auth_ns
 
 #creates a blueprint
 blueprint = Blueprint('nova_api', __name__)
@@ -23,6 +24,7 @@ api.add_namespace(nova_ns)
 api.add_namespace(file_ns)
 api.add_namespace(folder_ns)
 api.add_namespace(user_ns)
+api.add_namespace(auth_ns)
 
 
 
