@@ -25,7 +25,7 @@ def store_file_in_db( name, filetype, folder_id, user_id, internal_filename, fil
 
 
 
-def get_file( id ):
+def get_file_data( id ):
 
     try:
         with sql.DBConnection() as sql_connection:

@@ -141,4 +141,25 @@ class FilesDownload(Resource):
             abort( 500, e)
         else:
             return send_file(downloaded_file['body'], mimetype=downloaded_file['mime_type'])
+
+
+@name_space.route('/<int:id>/thumbnail/<string:filename>')
+@api.doc(params={'id': 'File id', 'filename': 'name of file to download as thumbnail'})
+class ThumbnailsDownload(Resource):
+
+    @name_space.response(200, 'Ok')
+    @api.doc(responses={ 404: 'File not found',  401: 'Unauthorized', 403: 'Forbiden', 503: 'Service Unavailable' })
+    @api.representation('application/octet-stream')
+    def get(self, id, filename):
+
+        try:
+            thumbnail = file_manager.generate_thumbnail( id )
+        except ResourceNotFoundException as e:
+            abort( 404, e.message )
+        except ( DBNotConnectedException ) as e:
+            abort( 500, e.message )
+        except Exception as e:
+            abort( 500, e)
+        else:
+            return send_file(thumbnail["body"], mimetype="image/jpeg")
             

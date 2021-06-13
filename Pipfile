@@ -7,7 +7,6 @@ verify_ssl = true
 pytest = "*"
 
 [packages]
-flask = "*"
 pytest = "*"
 pytest-flask = "*"
 flask-restx = "*"
@@ -17,6 +16,8 @@ boto3 = "*"
 flask-marshmallow = "*"
 flask-restplus-marshmallow = "*"
 pillow = "*"
+python-magic = "*"
+python-magic-bin = "*"
 
 [requires]
 python_version = "3.8"

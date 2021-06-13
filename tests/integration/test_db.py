@@ -65,7 +65,7 @@ def test_create_file_unexisting_folder_key(test_file_object):
 
 def test_get_file(test_file_object):
     file_id = itemgetter('id')(test_file_object)
-    fetched_file = file_module.get_file( id = file_id )
+    fetched_file = file_module.get_file_data( id = file_id )
     assert fetched_file['name'] == test_file_object['name']
 
 ##================ CHILD FILES/FOLDERS ================
@@ -102,7 +102,7 @@ def test_get_sotf_deleted_file(test_file_object):
     file_id = itemgetter('id')(test_file_object)
 
     with pytest.raises( ResourceNotFoundException ):
-        assert  file_module.get_file( id = file_id )
+        assert  file_module.get_file_data( id = file_id )
 
 
 ##================ DELETE FOLDER ================

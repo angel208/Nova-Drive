@@ -1,10 +1,11 @@
-from ..database.file import get_file, store_file_in_db, soft_delete_file as delete_file_from_db
+from ..database.file import get_file_data as get_file_data_from_db, store_file_in_db, soft_delete_file as delete_file_from_db
 from ..utils import file_helpers
 from ..utils.aws import s3
+from ..utils.file_storage import file_storage
 
 
 def get_file_data( file_id ):
-    return get_file(file_id)
+    return get_file_data_from_db(file_id)
 
 def soft_delete_file( file_id ):
     return delete_file_from_db(file_id)
@@ -33,7 +34,7 @@ def store_file( request_file, request_data, user ):
     file_md5 = file_helpers.calculate_md5( request_file )
 
     #store file into s3
-    s3.store_file( request_file, internal_user_file_name , file_type )
+    file_storage.store_file( request_file, internal_user_file_name , file_type )
 
     #store file info in db
     created_file_id = store_file_in_db(     name = user_file_name, 
@@ -52,17 +53,31 @@ def store_file( request_file, request_data, user ):
 
      #store thumbnail into s3
     
-    return get_file( created_file_id )
+    return get_file_data_from_db( created_file_id )
 
 def download_file( file_id ):
 
-    file_data = get_file(file_id)
+    file_data = get_file_data_from_db(file_id)
 
     internal_filename = file_data["internal_filename"]
     file_name = file_data["name"]
 
-    downloaded_file = s3.get_file(internal_filename)
+    downloaded_file = file_storage.get_file(internal_filename)
     downloaded_file['file_name'] = file_name
 
     return downloaded_file
+
+
+def generate_thumbnail( file_id ):
+
+    file_data = get_file_data_from_db(file_id)
+
+    internal_filename = file_data["internal_filename"]
+    file_name = file_data["name"]
+
+    downloaded_file = file_storage.get_file(internal_filename)
+    downloaded_file['file_name'] = file_name
+
+    return downloaded_file
+
 
