@@ -1,11 +1,12 @@
 from datetime import datetime
 from PIL import Image
 import hashlib
+import io
 
 #checks if request file is image
 def check_if_image( file_type ):
 
-    allowed_image_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+    allowed_image_extensions = {'image/png', 'image/jpg', 'image/jpeg', 'image/gif'}
     return file_type in allowed_image_extensions
 
 
@@ -16,8 +17,12 @@ def create_custom_internal_filename( file_name ):
 
 # 200x200
 def generate_tumbnail( file ):
-    im=Image.open(file)
-    im.thumbnail(size)
+
+    pillow_image = Image.open(file)
+    pillow_image.thumbnail([100, 100])
+
+    return pillow_image
+
 
 
 def get_file_size(fobj):

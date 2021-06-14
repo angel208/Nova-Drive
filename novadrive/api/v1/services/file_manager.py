@@ -47,11 +47,11 @@ def store_file( request_file, request_data, user ):
                                             
                                         )
 
-    #create thumbnail
-    #if( file_helpers.check_if_image(file_type) ):
-        #image_thumbnail = ""
-
-     #store thumbnail into s3
+    #generate thumbnail
+    if( file_helpers.check_if_image(file_type) ):
+        image_thumbnail = file_helpers.generate_tumbnail(request_file)
+        #store thumbnail
+        file_storage.store_thumbnail( image_thumbnail, internal_user_file_name , file_type )
     
     return get_file_data_from_db( created_file_id )
 
@@ -68,16 +68,14 @@ def download_file( file_id ):
     return downloaded_file
 
 
-def generate_thumbnail( file_id ):
+def download_thumbnail( file_id ):
 
     file_data = get_file_data_from_db(file_id)
 
-    internal_filename = file_data["internal_filename"]
-    file_name = file_data["name"]
+    thumbnail_uri = file_data["thumbnail_uri"]
 
-    downloaded_file = file_storage.get_file(internal_filename)
-    downloaded_file['file_name'] = file_name
+    generated_thumbnail = file_helpers.retrieve_thumbnail(thumbnail_uri)
 
-    return downloaded_file
+    return generated_thumbnail
 
 

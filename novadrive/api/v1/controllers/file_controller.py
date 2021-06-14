@@ -153,7 +153,7 @@ class ThumbnailsDownload(Resource):
     def get(self, id, filename):
 
         try:
-            thumbnail = file_manager.generate_thumbnail( id )
+            thumbnail = file_manager.download_thumbnail( id )
         except ResourceNotFoundException as e:
             abort( 404, e.message )
         except ( DBNotConnectedException ) as e:
@@ -161,5 +161,5 @@ class ThumbnailsDownload(Resource):
         except Exception as e:
             abort( 500, e)
         else:
-            return send_file(thumbnail["body"], mimetype="image/jpeg")
+            return send_file(thumbnail, mimetype="image/jpeg")
             
