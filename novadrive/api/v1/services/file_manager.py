@@ -2,6 +2,7 @@ from ..database.file import get_file_data as get_file_data_from_db, store_file_i
 from ..utils import file_helpers
 from ..utils.aws import s3
 from ..utils.file_storage import file_storage
+from ..utils.errors import  ThumbnailNotFoundException
 
 
 def get_file_data( file_id ):
@@ -33,8 +34,16 @@ def store_file( request_file, request_data, user ):
     #calculate HASH of the file
     file_md5 = file_helpers.calculate_md5( request_file )
 
-    #store file into s3
+    #store file
     file_storage.store_file( request_file, internal_user_file_name , file_type )
+
+    #generate thumbnail
+    thumbnail_uri = "unassigned"
+
+    if( file_helpers.check_if_image(file_type) ):
+        image_thumbnail = file_helpers.generate_tumbnail(request_file)
+        #store thumbnail
+        thumbnail_uri = file_storage.store_thumbnail( image_thumbnail, internal_user_file_name)
 
     #store file info in db
     created_file_id = store_file_in_db(     name = user_file_name, 
@@ -43,15 +52,10 @@ def store_file( request_file, request_data, user ):
                                             user_id = user_id, 
                                             internal_filename = internal_user_file_name,
                                             filesize = file_size,
-                                            md5 = file_md5
+                                            md5 = file_md5,
+                                            thumbnail_uri = thumbnail_uri
                                             
                                         )
-
-    #generate thumbnail
-    if( file_helpers.check_if_image(file_type) ):
-        image_thumbnail = file_helpers.generate_tumbnail(request_file)
-        #store thumbnail
-        file_storage.store_thumbnail( image_thumbnail, internal_user_file_name , file_type )
     
     return get_file_data_from_db( created_file_id )
 
@@ -61,8 +65,9 @@ def download_file( file_id ):
 
     internal_filename = file_data["internal_filename"]
     file_name = file_data["name"]
+    file_type = file_data["type"]
 
-    downloaded_file = file_storage.get_file(internal_filename)
+    downloaded_file = file_storage.get_file(internal_filename, file_type)
     downloaded_file['file_name'] = file_name
 
     return downloaded_file
@@ -74,8 +79,11 @@ def download_thumbnail( file_id ):
 
     thumbnail_uri = file_data["thumbnail_uri"]
 
-    generated_thumbnail = file_helpers.retrieve_thumbnail(thumbnail_uri)
+    if thumbnail_uri != 'unassigned' :
+        generated_thumbnail = file_storage.retrieve_thumbnail(thumbnail_uri)
+        return generated_thumbnail
+    else:
+        raise ThumbnailNotFoundException()
 
-    return generated_thumbnail
 
 

@@ -3,7 +3,7 @@ from flask_restx  import Api, Resource,  reqparse, fields, abort
 from marshmallow import Schema
 import os, json
 
-from ..utils.errors import find_error, ForeignResourceNotFoundException, DBNotConnectedException, ResourceNotFoundException, S3StoreException
+from ..utils.errors import find_error, ForeignResourceNotFoundException, DBNotConnectedException, ResourceNotFoundException, S3StoreException, ThumbnailNotFoundException
 from ..services import file_manager
 from ..utils import aux_functions, file_helpers
 from ..marshmallow_schemas.file import FileSchema
@@ -140,7 +140,7 @@ class FilesDownload(Resource):
         except Exception as e:
             abort( 500, e)
         else:
-            return send_file(downloaded_file['body'], mimetype=downloaded_file['mime_type'])
+            return send_file( filename_or_fp = downloaded_file['body'], mimetype = downloaded_file['mime_type'])
 
 
 @name_space.route('/<int:id>/thumbnail/<string:filename>')
@@ -156,10 +156,12 @@ class ThumbnailsDownload(Resource):
             thumbnail = file_manager.download_thumbnail( id )
         except ResourceNotFoundException as e:
             abort( 404, e.message )
+        except ThumbnailNotFoundException as e:
+            abort( 404, e.message )
         except ( DBNotConnectedException ) as e:
             abort( 500, e.message )
         except Exception as e:
             abort( 500, e)
         else:
-            return send_file(thumbnail, mimetype="image/jpeg")
+            return send_file( filename_or_fp = thumbnail['image'], mimetype = thumbnail['mime_type'])
             

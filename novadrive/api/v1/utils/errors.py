@@ -24,6 +24,12 @@ class ResourceNotFoundException(Exception):
         self.message = message
         super().__init__(self.message)
 
+class ThumbnailNotFoundException(Exception):
+
+    def __init__(self, message="There is no thumbnail for this file (maybe it's not an image)."):
+        self.message = message
+        super().__init__(self.message)
+
 class DBNotConnectedException(Exception):
 
     def __init__(self, message="The database is not connected."):
