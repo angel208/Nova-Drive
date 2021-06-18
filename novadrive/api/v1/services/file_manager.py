@@ -1,4 +1,5 @@
 from ..database.file import get_file_data as get_file_data_from_db, store_file_in_db, soft_delete_file as delete_file_from_db
+from .folder_manager import get_folder_data
 from ..utils import file_helpers
 from ..utils.aws import s3
 from ..utils.file_storage import file_storage
@@ -15,7 +16,10 @@ def store_file( request_file, request_data, user ):
 
     #data format: {'name' , 'folder_id' }
     user_file_name = request_data['name']
-    folder_id = request_data['folder_id']
+
+    #validate that folder exists
+    folder = get_folder_data( request_data['folder_id'] )
+    folder_id = folder['id']
 
     #get user_id
     user_id = user

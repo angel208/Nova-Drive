@@ -111,7 +111,7 @@ class FilesController(Resource):
         #store file
         try:
             created_file_data = file_manager.store_file( request_file, request_data, '1' )
-        except ForeignResourceNotFoundException as e:
+        except (ForeignResourceNotFoundException , ResourceNotFoundException) as e:
             abort( 404, e.message )
         except ( DBNotConnectedException, S3StoreException) as e:
             abort( 500, e.message )
