@@ -23,7 +23,6 @@ file_model = name_space.model('File', {
     'filesize':  fields.Integer,
     'folder_id':  fields.Integer,
     'user_id':  fields.Integer,
-    'file_uri':  fields.String,
     'thumbnail_uri':  fields.String,
     'md5':  fields.String,
     'created':  fields.DateTime(dt_format='rfc822'),
@@ -50,6 +49,37 @@ class FilesResource(Resource):
             file_data = file_manager.get_file_data( id )
             file_schema = FileSchema()
             return_data = file_schema.dump( file_data )
+        except ResourceNotFoundException as e:
+            abort( 404, e.message )
+        except ( DBNotConnectedException) as e:
+            abort( 500, e.message )
+        except Exception as e:
+            abort( 500, e)
+        else:
+            return return_data, 200
+
+    @name_space.response(200, 'Ok', file_model)
+    @api.doc(responses={ 404: 'File not found',  401: 'Unauthorized', 403: 'Forbiden', 503: 'Service Unavailable' })
+    def put(self, id):
+
+        #get and validate data
+        try:
+            request_data = json.loads(request.form.get('data'))
+        except TypeError:
+            abort( 400, 'Bad Request. Incorrect Json.' )
+
+        #taken from https://marshmallow.readthedocs.io/en/2.x-line/quickstart.html#partial-loading
+        marshmallow_validation = FileSchema().validate(request_data, partial=True)
+        validation_error = find_error( marshmallow_validation ) 
+        
+        if( validation_error != None ):
+            abort( 400, 'Bad Request.', details=validation_error )
+
+        try:
+            print(request_data)
+            updated_file_data = file_manager.update_file_data( id, request_data )
+            file_schema = FileSchema()
+            return_data = file_schema.dump( updated_file_data )
         except ResourceNotFoundException as e:
             abort( 404, e.message )
         except ( DBNotConnectedException) as e:

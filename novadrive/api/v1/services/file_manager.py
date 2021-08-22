@@ -1,4 +1,5 @@
-from ..database.file import get_file_data as get_file_data_from_db, store_file_in_db, soft_delete_file as delete_file_from_db
+from re import T
+from ..database.file import get_file_data as get_file_data_from_db, store_file_in_db, rename_file, move_file, soft_delete_file as delete_file_from_db
 from .folder_manager import get_folder_data
 from ..utils import file_helpers
 from ..utils.aws import s3
@@ -7,6 +8,20 @@ from ..utils.errors import  ThumbnailNotFoundException
 
 
 def get_file_data( file_id ):
+    return get_file_data_from_db(file_id)
+
+def update_file_data( file_id, file_data ):
+
+    if 'folder_id' in file_data:
+        #validate that folder exists
+        folder = get_folder_data( file_data['folder_id'] )
+        folder_id = folder['id']
+        move_file( file_id, folder_id )
+
+    if 'name' in file_data :
+        rename_file( file_id, file_data['name'] )
+
+
     return get_file_data_from_db(file_id)
 
 def soft_delete_file( file_id ):

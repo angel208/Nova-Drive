@@ -8,3 +8,11 @@ def  get_app_config( config_key ):
 
     return config['app_config'][config_key]
 
+def  get_app_config( config_key ):
+
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+
+    return config['app_config'][config_key]
+
+

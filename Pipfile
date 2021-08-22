@@ -18,6 +18,7 @@ flask-restplus-marshmallow = "*"
 pillow = "*"
 python-magic = "*"
 python-magic-bin = "*"
+passlib = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"

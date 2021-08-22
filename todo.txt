@@ -1,0 +1,15 @@
+libreria de timings para transiciones (o alguna guia de estilos para unificar los times de las transiciones)
+scroll into view para hacer el scrolls o usar un componente de scroll
+
+
+unificar paddings entre secciones
+unificar secciones en una clase css aparte
+unificar inputs dentro de componente aparte
+limpiar imports
+unificar navlinks en componentes
+ocultar navbar cuando sea necesario (quizas solo al bajar)
+agregar carousel
+
+
+
+
